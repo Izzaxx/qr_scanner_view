@@ -63,11 +63,9 @@ class _QrScannerViewState extends State<QrScannerView> with TickerProviderStateM
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      if (scanData.code!.length == 15) {
-        setState(() {
-          result = scanData;
-        });
-      }
+      setState(() {
+        result = scanData;
+      });
     });
   }
 

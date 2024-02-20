@@ -16,15 +16,100 @@ Install via `flutter pub add`:
 dart pub add qr_scanner_view
 ```
 
+or
+
+Manual Installer in ```pubspec.yaml```
+
+```yaml
+qr_scanner_view:
+    path: packages/qr_scanner_view
+```
+
 ---
+
+## Configuration ⚙️
+
+You need to configurate permissions if you want to use in differents platforms
+
+### Android
+
+In order to use this plugin, please update the Gradle, Kotlin and Kotlin Gradle Plugin:
+
+In android/build.gradle change ```ext.kotlin_version = '1.3.50'``` to ```ext.kotlin_version = '1.5.10'```
+
+In ```android/build.gradle``` change ```classpath 'com.android.tools.build:gradle:3.5.0'``` to ```classpath 'com.android.tools.build:gradle:4.2.0'```
+
+In ```android/gradle/wrapper/gradle-wrapper.properties``` change
+```distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.2-all.zip``` to
+```distributionUrl=https\://services.gradle.org/distributions/gradle-6.9-all.zip```
+
+In ```android/app/build.gradle``` change ```defaultConfig{ ... minSdkVersion 16 } to defaultConfig{ ... minSdkVersion 20 }```
+
+### iOS
+
+In order to use this plugin, add the following to your Info.plist file:
+
+```plist
+<key>io.flutter.embedded_views_preview</key>
+<true/>
+<key>NSCameraUsageDescription</key>
+<string>This app needs camera access to scan QR codes</string>
+```
 
 ## Continuous Integration 🤖
 
-Qr Scanner View comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
+In order to use this plugin, add the following imports in your new page or view
 
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
+```dart
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_scanner_view/qr_scanner_view.dart';
+```
 
----
+For implement or integrate qr scanner view you need to create a ```stateless``` widget wehere you can implement the qr scanner
+
+```dart
+class QrScannerPage extends StatelessWidget {
+  const QrScannerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return QrScannerView(
+      onResult: (result) {
+        // implement logic with result value
+      },
+    );
+  }
+}
+```
+
+You'll need to add the barcode format support in your code, if you want to scan QR or Barcode
+
+```dart
+formatsAllowed: const [
+    // barcode formats
+],
+```
+
+In the end it would be this way
+
+```dart
+class QrScannerPage extends StatelessWidget {
+  const QrScannerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return QrScannerView(
+        formatsAllowed: const [
+            // barcode formats
+        ],
+        onResult: (result) {
+            // implement logic with result value
+        },
+    );
+  }
+}
+```
+
 
 ## Running Tests 🧪
 

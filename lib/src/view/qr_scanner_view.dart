@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'package:qr_scanner_view/src/widgets/scanner_line_animated.dart';
@@ -10,11 +11,13 @@ class QrScannerView extends StatefulWidget {
 
   final ValueChanged onResult;
   final List<BarcodeFormat>? formatsAllowed;
+  final String? text;
 
   const QrScannerView({
     super.key, 
     required this.onResult,
-    this.formatsAllowed
+    this.formatsAllowed,
+    this.text,
   });
 
   @override
@@ -105,7 +108,7 @@ class _QrScannerViewState extends State<QrScannerView> with TickerProviderStateM
                 children: [
                   QRView(
                     key: qrKey,
-                    formatsAllowed: widget.formatsAllowed!,
+                    formatsAllowed: widget.formatsAllowed ?? <BarcodeFormat>[],
                     onQRViewCreated: _onQRViewCreated,
                   ),
                   SizedBox(
@@ -122,16 +125,19 @@ class _QrScannerViewState extends State<QrScannerView> with TickerProviderStateM
                     animation: _animationController,
                     screenSize: screenSize,
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: FractionalTranslation(
-                      translation: const Offset(0, 4),
-                      child: SizedBox(
-                        width: 200,
-                        child: Text(
-                          'Escanea el codigo de barras de tu pase de caja', 
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Theme.of(context).colorScheme.background),
+                  Visibility(
+                    visible: widget.text != null,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: FractionalTranslation(
+                        translation: const Offset(0, 4),
+                        child: SizedBox(
+                          width: 200,
+                          child: Text(
+                            widget.text ?? '', 
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -143,9 +149,9 @@ class _QrScannerViewState extends State<QrScannerView> with TickerProviderStateM
                         Navigator.pop(context);
                       }, 
                       icon: Icon(
-                        Icons.cancel,
+                        Icons.close,
                         size: 40.0,
-                        color: Theme.of(context).colorScheme.background,
+                        color: Colors.white,
                       )
                     ),
                   ),
